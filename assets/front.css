@@ -1,0 +1,185 @@
+body {
+	font-family: sans-serif;
+	font-size: 75%;
+	background: #EEEEEE;
+	color: #333333;
+	margin: 0;
+	width: 100%;
+}
+
+#logo {
+	background:url('_logo.png') top left no-repeat;
+	width: 300px; height: 100px;
+	margin: 0 auto;
+}
+
+/* menu */
+
+#menu ul {
+	list-style: none;
+	margin: 0;
+	padding: 7px 0;
+	border-bottom: 1px solid #CCC;
+	font-weight: bold;
+	text-align: center;
+	white-space: nowrap;
+}
+
+#menu ul li {
+	display: inline;
+	margin: 0 2px;
+}
+
+#menu ul a {
+	text-decoration: none;
+	padding: 0 0 3px;
+	border-bottom: 4px solid #FFF;
+	color: #999; 
+}
+
+#menu ul a#active, #menu ul a:hover {
+	border-color: #888;
+	color: #555;
+}
+
+/* conteudo */
+
+#box, table {
+	background: #ffffff;
+	border: 1px solid #919191;
+	margin-bottom: 5px; padding-bottom: 5px;
+	width: 900px; height: auto;
+	margin: 10px auto; 
+}
+
+#box2 {
+	position: relative;
+	background: #ffffff;
+	border: 1px solid #919191;
+	margin-bottom: 5px; padding-bottom: 5px;
+	width: 900px; height: auto;
+}
+
+#inside {
+	width: 900px; height: auto;
+	margin: 0 auto; 
+}
+
+#boxheader, th {
+	background: #c0c0c0;
+	padding-left: 5px;
+	height: auto;
+	border-bottom: 1px solid #000;
+}
+
+#boxheader h2 {
+	margin: 0;
+	color: #737373;
+}
+
+#boxcontent {
+	background:#ffffff;
+	padding:.5em;
+	padding-top:.25em;
+	padding-bottom:0;
+	line-height:130%;
+}
+
+#boxcontent img {
+	border: 0;
+}
+
+#column {
+	float: left;
+	position: relative;
+	overflow: hidden;
+	margin-right: 25px;
+}
+
+#column h2 {
+	font-size: 12px;
+}
+
+#column ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+#column ul li {
+	margin: 0 2px;
+}
+
+#column ul a {
+	text-decoration: none;
+	padding: 0 0 3px;
+	color: #FF6600; 
+}
+
+#column ul a:hover {
+	border-color: #888;
+	color: #0066FF;
+}
+
+#footer {
+	clear: both; 
+	margin-bottom: 5px; padding-bottom: 5px;
+	width: 900px; height: auto;
+	margin: 10px auto; 
+	text-align: center;
+	font-size: 8px;
+}
+
+.recent-images {
+	text-align: center;
+	height: 345px;
+	overflow: auto;
+	margin-bottom: 0px; padding-bottom: 0px;
+}
+
+.recent-images li { 
+	margin: auto; 
+	margin-bottom: 5px; 
+	display: block; 
+	width: 250px; 
+	padding: 1px;
+}
+
+.recent-images a {
+	display: block;
+}
+
+.recent-images img {
+	display: block;
+	margin: auto;
+	max-width: 250px;
+	max-height: 150px;
+}
+
+.recent-images li {
+	background: #120;
+}
+
+/* elementos */
+
+hr {
+	color: #999;
+	height: 1px;
+	width: 98%;
+	border-bottom: 0;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table, th, td {
+	border: 1px solid black;
+	padding: 2px;
+}
+
+a {
+	color: #FF6600;
+}
+a:hover {
+	color: #0066FF;
+}
