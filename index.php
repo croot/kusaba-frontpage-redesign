@@ -228,7 +228,7 @@
 									<td>".$b['reason']."</td>
 									<td>".($b['boards'] == '' ? 'Todas':$b['boards'])."</td>
 									<td>".date("d/m/Y", $b['at'])."</td>
-									<td>".($b['until'] > 0 ? date("d/m/Y", $b['at']) : 'Never')."</td>
+									<td>".($b['until'] > 0 ? date("d/m/Y", $b['until']) : 'Never')."</td>
 									<td>".str_replace("board.php","Skynet",$b['by'])."</td>
 								</tr>";
 						}
