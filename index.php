@@ -75,7 +75,7 @@
 					<div id="boxheader"><h2>Recent Imagens</h2></div>
 					<div id="boxcontent" class="recent-images">
 							<?php
-								$img = $tc_db->GetAll("SELECT * FROM ".KU_DBPREFIX."posts WHERE (`file_type` = 'jpg' OR `file_type` = 'gif' OR `file_type` = 'png') AND `IS_DELETED` = 0 AND boardid!=12 AND boardid!=13 ORDER BY `timestamp` DESC LIMIT 0,10");
+								$img = $tc_db->GetAll("SELECT * FROM ".KU_DBPREFIX."posts WHERE (`file_type` = 'jpg' OR `file_type` = 'gif' OR `file_type` = 'png') AND `IS_DELETED` = 0 ORDER BY `timestamp` DESC LIMIT 0,10");
 
 								foreach ($img as $i) { 
 									if ($i['thumb_h'] > 140) { $h = 140; }
@@ -93,7 +93,7 @@
 					<div id="boxheader"><h2>Recent Posts</h2></div>
 					<div id="boxcontent">
 							<?php
-								$res = $tc_db->GetAll("SELECT * FROM `" . KU_DBPREFIX . "posts` WHERE `IS_DELETED` = 0 AND boardid!=12 AND boardid!=13 ORDER BY timestamp DESC LIMIT 0,7");
+								$res = $tc_db->GetAll("SELECT * FROM `" . KU_DBPREFIX . "posts` WHERE `IS_DELETED` = 0 ORDER BY timestamp DESC LIMIT 0,7");
 								foreach ($res as $r) { 
 									$b = id2board($r['boardid']);
 									echo date("d/m \@ H:i",$r['timestamp'])." - <a href='".$b."/'>/".$b."/</a> - <a href='".$b."/res/".($r['parentid'] == 0?$r['id']:$r['parentid']).".html#".$r['id']."'>#".$r['id']."</a> - ".cut($r['message'],50)."<br />";
@@ -106,7 +106,7 @@
 					<div id="boxheader"><h2>Popular Threads</h2></div>
 					<div id="boxcontent">
 							<?php
-								$res = $tc_db->GetAll("SELECT *,count(parentid) as replies FROM ".KU_DBPREFIX."posts WHERE IS_DELETED=0 AND parentid!=0 AND boardid!=12 AND boardid!=13 GROUP BY parentid ORDER BY replies DESC LIMIT 0,7");
+								$res = $tc_db->GetAll("SELECT *,count(parentid) as replies FROM ".KU_DBPREFIX."posts WHERE IS_DELETED=0 AND parentid!=0 GROUP BY parentid ORDER BY replies DESC LIMIT 0,7");
 								foreach ($res as $r) { 
 									$q = $tc_db->GetAll("SELECT * FROM ".KU_DBPREFIX."posts WHERE id='".$r['parentid']."' AND boardid='".$r['boardid']."'");
 									$b = id2board($q[0]['boardid']);
@@ -229,7 +229,7 @@
 									<td>".($b['boards'] == '' ? 'Todas':$b['boards'])."</td>
 									<td>".date("d/m/Y", $b['at'])."</td>
 									<td>".($b['until'] > 0 ? date("d/m/Y", $b['until']) : 'Never')."</td>
-									<td>".str_replace("board.php","Skynet",$b['by'])."</td>
+									<td>".str_replace("board.php","SYSTEM",$b['by'])."</td>
 								</tr>";
 						}
 						?>
