@@ -1,261 +1,145 @@
-<?php 
-	require_once('config.php');
-	require_once('assets/funcoes.php');
-	require_once('inc/functions.php');
-	require_once(KU_ROOTDIR . 'inc/classes/bans.class.php');
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<?php
 
-	<head>
-		<title>xchan</title>
-		<link rel="stylesheet" type="text/css" href="assets/front.css">
-	</head>
+/** 
+ * Kusaba X front page redesign v2
+ * 
+ * by include <include@null.net>
+ *
+ * http://xchan.info
+ */
 
-	<body>
-		<div id="logo"></div>
+require_once 'config.php';
+require_once KU_ROOTDIR . 'lib/dwoo.php';
+require_once KU_ROOTDIR . 'inc/functions.php';
+require_once KU_ROOTDIR . 'inc/classes/bans.class.php';
 
-		<div id="wrapper">
+$dwoo = new Dwoo();
 
-			<div id="menu">
-				<ul>
-					<li><a href="./" <?php if (!isset($_GET['p']) || $_GET['p'] == '') { echo 'id="active"'; } ?>>Home</a></li>
-					<li><a href="?p=news" <?php if (isset($_GET['p']) && $_GET['p'] == 'news') { echo 'id="active"'; } ?>>News</a></li>
-					<li><a href="?p=faq" <?php if (isset($_GET['p']) && $_GET['p'] == 'faq') { echo 'id="active"'; } ?>>F.A.Q.</a></li>
-					<li><a href="?p=rules" <?php if (isset($_GET['p']) && $_GET['p'] == 'rules') { echo 'id="active"'; } ?>>Regras</a></li>
-					<li><a href="?p=banlist" <?php if (isset($_GET['p']) && $_GET['p'] == 'banlist') { echo 'id="active"'; } ?>>Bans</a></li>
-				</ul>
-			</div>
+$dwoo_data = new Dwoo_Data();
+$dwoo_data->assign('title', KU_NAME);
 
-			<?php
-			if (!isset($_GET['p']) || $_GET['p'] == '') { ?>
-				<div id="box">
-				<div id="boxheader"><h2>Boards</h2></div>
-				<div id="boxcontent">
-					<?php
-						$sections = $tc_db->GetAll("SELECT * FROM `" . KU_DBPREFIX . "sections` ORDER BY `order` ASC");
-						foreach ($sections as $key=>$section) {
-							echo "<div id='column'>
-									<h2>".$section['name']."</h2>";
-							$results = $tc_db->GetAll("SELECT * FROM `" . KU_DBPREFIX . "boards` WHERE `section` = '" . $section['id'] . "' ORDER BY `order` ASC, `name` ASC");
-							echo "<ul>";
-							foreach ($results as $line) {
-									echo "<li><a href='".$line['name']."/'>/".$line['name']."/ - ".$line['desc']."</a></li>";
-							}
-							echo "</ul>
-							</div>";
-						}
-					?>
-					<div id="column">
-						<h2>Outros</h2>
-						<ul>
-							<!--<li><a href="http://bbs.xchan.info/"><strike>xchan BBS</strike></a></li>
-							<li><a href="http://advice.xchan.info/">Advice Generator</a></li>
-							<li><a href="http://tracker.xchan.info">Torrent Tracker</a></li>
-							<li><a href="/irc.html" title="#xchan @ irc.rizon.net">IRC</a></li>-->
-						</ul>
-					</div>
-					<br style="clear: left;" />
-				</div>
-			</div>
+$prefix = KU_DBPREFIX;
 
-			<div id="box">
-					<?php
-						$news = $tc_db->GetAll("SELECT * FROM `" . KU_DBPREFIX . "front` WHERE `page` = 0 ORDER BY `timestamp` DESC LIMIT 0,1");
-						echo "<span style='float: right; margin-top: 2px; margin-right: 5px;'>(<a href='?p=news&id=".$news[0]['id']."'>#permalink</a>)</span><div id='boxheader'><h2>".$news[0]['subject']." - ".date("d/m/Y \@ H:i:s",$news[0]['timestamp'])."</h2></div>
-						<div id='boxcontent'>";
-						echo "<p>".$news[0]['message']."</p>";
-					?>
-				</div>
-			</div>
+$page = (isset($_GET['page']) ? $_GET['page'] : 'index');
 
-			<div id="inside">
+$dwoo_data->assign('page', $page);
 
-				<div id="box2" style="width: 400px; float: left; padding-bottom: 0px;">
-					<div id="boxheader"><h2>Recent Imagens</h2></div>
-					<div id="boxcontent" class="recent-images">
-							<?php
-								$img = $tc_db->GetAll("SELECT * FROM ".KU_DBPREFIX."posts WHERE (`file_type` = 'jpg' OR `file_type` = 'gif' OR `file_type` = 'png') AND `IS_DELETED` = 0 ORDER BY `timestamp` DESC LIMIT 0,10");
+switch ($page) {
+	case 'news':
+		$news = $tc_db->GetAll("SELECT * FROM {$prefix}front WHERE page = 0 ORDER BY timestamp DESC");
 
-								foreach ($img as $i) { 
-									if ($i['thumb_h'] > 140) { $h = 140; }
-									else { $h = $i['thumb_h']; }
-									if ($i['parentid'] == 0) { $iid = $i['id']; }
-									else { $iid = $i['parentid']; }
-									$b = id2board($i['boardid']);
-									echo "<li><a href='".$b."/res/".$iid.".html#".$i['id']."'><img src='".$b."/thumb/".$i['file']."s.".$i['file_type']."' height='".$h."' /></a></li>";
-								}
-							?>
-					</div>
-				</div>
+		$dwoo_data->assign('news', $news);
 
-				<div id="box2" style="width: 480px; float: right;">
-					<div id="boxheader"><h2>Recent Posts</h2></div>
-					<div id="boxcontent">
-							<?php
-								$res = $tc_db->GetAll("SELECT * FROM `" . KU_DBPREFIX . "posts` WHERE `IS_DELETED` = 0 ORDER BY timestamp DESC LIMIT 0,7");
-								foreach ($res as $r) { 
-									$b = id2board($r['boardid']);
-									echo date("d/m \@ H:i",$r['timestamp'])." - <a href='".$b."/'>/".$b."/</a> - <a href='".$b."/res/".($r['parentid'] == 0?$r['id']:$r['parentid']).".html#".$r['id']."'>#".$r['id']."</a> - ".cut($r['message'],50)."<br />";
-								}
-							?>
-					</div>
-				</div>
+		$dwoo->output(KU_TEMPLATEDIR . '/front_news.tpl', $dwoo_data);		
 
-				<div id="box2" style="width: 480px; float: right;">
-					<div id="boxheader"><h2>Popular Threads</h2></div>
-					<div id="boxcontent">
-							<?php
-								$res = $tc_db->GetAll("SELECT *,count(parentid) as replies FROM ".KU_DBPREFIX."posts WHERE IS_DELETED=0 AND parentid!=0 GROUP BY parentid ORDER BY replies DESC LIMIT 0,7");
-								foreach ($res as $r) { 
-									$q = $tc_db->GetAll("SELECT * FROM ".KU_DBPREFIX."posts WHERE id='".$r['parentid']."' AND boardid='".$r['boardid']."'");
-									$b = id2board($q[0]['boardid']);
-									echo date("d/m \@ H:i",$q[0]['timestamp'])." - <a href='".$b."/'>/".$b."/</a> - <a href='".$b."/res/".$q[0]['id'].".html#".$q[0]['id']."' title='Respostas:  ".$r['replies']."'>#".$q[0]['id']."</a> - ".cut($q[0]['message'],50)."<br />";
-								}
-							?>
-					</div>
-				</div>
+		break;
 
-				<div id="box2" style="width: 480px; float: right;">
-					<div id="boxheader"><h2>Stats</h2></div>
-					<div id="boxcontent">
-							<?php 
-								$res = $tc_db->GetAll("SELECT id FROM `" . KU_DBPREFIX . "posts` WHERE `IS_DELETED` = 0 AND `file` != ''");
-								echo "Imagens: ".count($res)."<br />";
-								$res = $tc_db->GetAll("SELECT id FROM `" . KU_DBPREFIX . "posts` WHERE `IS_DELETED` = 0");
-								echo "Posts Ativos: ".count($res)."<br />";
-								$res = $tc_db->GetAll("SELECT sum(file_size) FROM `" . KU_DBPREFIX . "posts` WHERE `IS_DELETED` = 0 AND `file` != ''");
-								$s = fileSizeInfo($res[0][0]);
-								echo "Espaço em disco: ".$s[0]." ".$s[1]."<br />";
-							?>
-					</div>
-				</div>
+	case 'faq':
+		$faq = $tc_db->GetAll("SELECT * FROM {$prefix}front WHERE page = 1 ORDER BY `order` ASC");
 
-			</div>
+		$dwoo_data->assign('faq', $faq);
 
-			<br style="clear: left" />
-
-			<?php } 
-			elseif ($_GET['p'] == 'news') {
-				if (!isset($_GET['id']) || $_GET['id'] == '') {
-					$news = $tc_db->GetAll("SELECT * FROM `" . KU_DBPREFIX . "front` WHERE `page` = 0 ORDER BY `timestamp` DESC");
-					foreach ($news as $n) {
-						echo "<div id='box'>
-								<span style='float: right; margin-top: 2px; margin-right: 5px;'>(<a href='?p=news&id=".$n['id']."'>#permalink</a>)</span>
-								<div id='boxheader'><h2>".$n['subject']." - ".date("d/m/Y \@ H:i:s",$n['timestamp'])."</h2></div>
-								<div id='boxcontent'>".$n['message']."</div>
-							  </div>";
-					}
-				} else {
-					$news = $tc_db->GetAll("SELECT * FROM `" . KU_DBPREFIX . "front` WHERE `page` = 0 AND id = ".(int)$_GET['id']." ORDER BY `timestamp` DESC");
-					echo "<div id='box'>
-							<div id='boxheader'><h2>".$news[0]['subject']." - ".date("d/m/Y \@ H:i:s",$news[0]['timestamp'])."</h2></div>
-							<div id='boxcontent'>".$news[0]['message']."</div>
-						  </div>";
-				}
-
-			}
-
-			elseif ($_GET['p'] == 'faq') { 
-				echo "<div id='inside'>
-							<div id='box'>
-								<div id='boxheader'><h2>FAQ</h2></div>
-								<div id='boxcontent'>Welcome to our FAQ.</div>
-							</div>
-							<div id='box2' style='width: 350px; float: left;'>
-								<div id='boxheader'><h2>Questions</h2></div>
-								<div id='boxcontent'><ul>";
-
-				$faq = $tc_db->GetAll("SELECT * FROM `" . KU_DBPREFIX . "front` WHERE `page` = 1 ORDER BY `order` ASC");
-				foreach ($faq as $f) {
-					++$i;
-					echo "<li><a href='#r-".$i."'>".$f['subject']."</a></li>";
-				}
-								
-				echo "</ul></div>
-							</div>
-							<div id='box2' style='width: 530px; float: right;'>
-								<div id='boxheader'><h2>Replies</h2></div>
-								<div id='boxcontent'>";
-				
-				foreach ($faq as $f) {
-					++$ii;
-					echo "<h3 id='r-".$ii."'>".$f['subject']."</h3>".$f['message']."<hr />";
-				}
-								
-				echo "</div>
-							</div>
-					  </div>
-					  <br style='clear: left' />";			
-			}
-
-			elseif ($_GET['p'] == 'rules') {
-				echo "<div id='box'>
-								<div id='boxheader'><h2>Rules</h2></div>
-								<div id='boxcontent'><ol>";
-
-				$regras = $tc_db->GetAll("SELECT * FROM `" . KU_DBPREFIX . "front` WHERE `page` = 2 ORDER BY `order` ASC");
-				foreach ($regras as $r) {
-					echo "<li>".$r['message']."</li>";
-				}
-								
-				echo "</ol></div>
-							</div>";
-			}
-
-			// elseif ($_GET['p'] == 'custom') { }
-
-			elseif ($_GET['p'] == 'banlist') {
-				?>
+		$dwoo->output(KU_TEMPLATEDIR . '/front_faq.tpl', $dwoo_data);
 		
-				<table>
-					<theader>
-						<tr>
-							<th>IP</th>
-							<th>Reason</th>
-							<th>Boards</th>
-							<th>Banned at</th>
-							<th>Expires at</th>
-							<th>Moderator</th>
-						</tr>
-					</theader>
-					<tbody>
-						<?php
-						$bans = $tc_db->GetAll("SELECT * FROM `" . KU_DBPREFIX . "banlist` ORDER BY `at` DESC LIMIT 0,25");
-						foreach ($bans as $b) {
-							echo "<tr>
-									<td><a href='http://www.geoiptool.com/pt/?IP=".md5_decrypt($b['ip'],KU_RANDOMSEED)."'>".md5_decrypt($b['ip'],KU_RANDOMSEED)."</a></td>
-									<td>".$b['reason']."</td>
-									<td>".($b['boards'] == '' ? 'Todas':$b['boards'])."</td>
-									<td>".date("d/m/Y", $b['at'])."</td>
-									<td>".($b['until'] > 0 ? date("d/m/Y", $b['until']) : 'Never')."</td>
-									<td>".str_replace("board.php","SYSTEM",$b['by'])."</td>
-								</tr>";
-						}
-						?>
-					</tbody>
-					<tfooter>
-					</tfooter>
-				</table>
-			
-				<?php
-			}
+		break;
 
-			elseif ($_GET['p'] == 'contact') {
-				?>
-				<div id="box">
-					<div id='boxheader'><h2>Contato</h2></div>
-					<div id='boxcontent'>Em caso de duvidas, criticas ou sugestões favor entrar em contato@xchan.info<br />Bans não serão tratados via email e nem em lugar algum, se você está banido simplesmente espere o ban expirar.</div>
-				</div>
-				<?php
-			}
- 
-			?>
+	case 'rules':
+		$rules = $tc_db->GetAll("SELECT * FROM {$prefix}front WHERE page = 2 ORDER BY `order` ASC");
 
-			<div id="footer">Copyright &copy; 2009-<?php echo date("Y"); ?> xchan.info - Some rights reserved<br /><a href="kusaba.php" target="_page">- Versão com Frames -</a></div>
+		$dwoo_data->assign('rules', $rules);
 
-		</div>
+		$dwoo->output(KU_TEMPLATEDIR . '/front_rules.tpl', $dwoo_data);
+		
+		break;
 
-	</body>
+	case 'banlist':
+		$bans = $tc_db->GetAll("SELECT ip, reason, boards, at, `by`, COALESCE(until, 'nuncAA') as until FROM {$prefix}banlist WHERE `by` != 'board.php' AND `by` != 'SERVER' ORDER BY `at` DESC LIMIT 25");
 
-</html>
+		$dwoo_data->assign('bans', $bans);
+		$dwoo_data->assign('seed', KU_RANDOMSEED);
+
+		$dwoo->output(KU_TEMPLATEDIR . '/front_bans.tpl', $dwoo_data);
+
+		break;
+	
+	default:
+		$sections = $tc_db->GetAll("SELECT * FROM {$prefix}sections ORDER BY `order` ASC");
+		
+		$boards = $tc_db->GetAll("SELECT * from {$prefix}boards ORDER by `order` ASC, name ASC");
+
+		$last_new = $tc_db->GetAll("SELECT * FROM {$prefix}front WHERE page = 0 ORDER BY timestamp DESC LIMIT 1");
+
+		$sql = "SELECT 
+				    p.id,
+				    CASE p.parentid
+				        WHEN 0 THEN p.id
+				        ELSE p.parentid
+				    END AS parentid,
+				    b.name AS board,
+				    p.file,
+				    p.file_type
+				FROM {$prefix}posts AS p
+				JOIN {$prefix}boards AS b ON p.boardid = b.id
+				WHERE file_type IN ('jpg' , 'gif', 'png') AND IS_DELETED = 0
+				ORDER BY TIMESTAMP DESC
+				LIMIT 10";
+
+		$last_images = $tc_db->GetAll($sql);
+
+		$sql = "SELECT 
+				    c.name AS board,
+					a.id,
+					CASE a.parentid
+					   WHEN 0 THEN a.id
+						ELSE a.parentid
+					END AS parentid,
+					a.message,
+					a.name,
+					a.timestamp
+				FROM {$prefix}posts a
+				JOIN (SELECT MAX(id) AS lastid, boardid FROM {$prefix}posts WHERE is_deleted = 0 GROUP BY boardid) b ON a.id = b.lastid AND a.boardid = b.boardid
+				JOIN {$prefix}boards c ON a.boardid = c.id";
+
+		$last_posts = $tc_db->GetAll($sql);
+
+		// Sub-queries <3
+
+		$sql = "SELECT
+				    c.name AS board,
+					a.id,
+					CASE a.parentid
+					   WHEN 0 THEN a.id
+						ELSE a.parentid
+					END AS parentid,
+					a.message,
+					a.name,
+					b.replies,
+					a.timestamp
+				FROM {$prefix}posts a
+				JOIN (SELECT * FROM (SELECT COUNT(parentid) AS replies, parentid, boardid FROM {$prefix}posts WHERE parentid > 0 AND is_deleted = 0 GROUP BY parentid ORDER BY replies DESC) AS b GROUP BY b.boardid) b
+				ON a.id = b.parentid AND a.boardid = b.boardid
+				JOIN {$prefix}boards c ON a.boardid = c.id";
+
+		$popular_threads = $tc_db->GetAll($sql);
+
+		$imagecount = $tc_db->GetAll("SELECT COUNT(*) AS imagecount, SUM(file_size) AS imagesize FROM k_posts WHERE file_type != '' AND is_deleted = 0");
+
+		$postcount  = $tc_db->GetAll("SELECT COUNT(*) AS postcount FROM {$prefix}posts WHERE is_deleted = 0");
+
+		$dwoo_data->assign('sections', $sections);
+		$dwoo_data->assign('boards', $boards);
+		$dwoo_data->assign('last_new', $last_new);
+		$dwoo_data->assign('last_images', $last_images);
+		$dwoo_data->assign('last_posts', $last_posts);
+		$dwoo_data->assign('popular_threads', $popular_threads);
+		$dwoo_data->assign('imagecount', $imagecount);
+		$dwoo_data->assign('postcount', $postcount[0]['postcount']);
+
+		$dwoo->output(KU_TEMPLATEDIR . '/front_index.tpl', $dwoo_data);		
+
+		break;
+}
+
+
+
+

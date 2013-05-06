@@ -1,21 +1,28 @@
-body {
-	font-family: sans-serif;
-	font-size: 75%;
-	background: #EEEEEE;
+html {
+	/*background-color: #C4C4C4;*/
 	color: #333333;
-	margin: 0;
-	width: 100%;
+	font-family: "Trebuchet MS", "Tahoma", "Verdana", "Arial", sans-serif;
+	font-size: 13px;
 }
 
-#logo {
-	background:url('_logo.png') top left no-repeat;
-	width: 300px; height: 100px;
+body {
+	width: 980px;
+	margin: 0 auto;
+	background-color:  #F7F7F7;
+}
+
+/** logo **/
+
+.logo { 
+	background: url('_logo.png') top left no-repeat;
+	width: 300px;
+	height: 120px;
 	margin: 0 auto;
 }
 
-/* menu */
+/** menu **/
 
-#menu ul {
+.menu ul {
 	list-style: none;
 	margin: 0;
 	padding: 7px 0;
@@ -25,161 +32,132 @@ body {
 	white-space: nowrap;
 }
 
-#menu ul li {
+.menu ul li {
 	display: inline;
 	margin: 0 2px;
 }
 
-#menu ul a {
+.menu ul a {
 	text-decoration: none;
 	padding: 0 0 3px;
 	border-bottom: 4px solid #FFF;
 	color: #999; 
 }
 
-#menu ul a#active, #menu ul a:hover {
+.menu ul a.active, .menu ul a:hover {
 	border-color: #888;
 	color: #555;
 }
 
-/* conteudo */
+/** boxies **/
 
-#box, table {
-	background: #ffffff;
+.clear { 
+	clear: both;
+}
+
+.box { 
+	background: #FFF;
 	border: 1px solid #919191;
-	margin-bottom: 5px; padding-bottom: 5px;
-	width: 900px; height: auto;
-	margin: 10px auto; 
+	margin: 15px 0 0 0;
 }
 
-#box2 {
-	position: relative;
-	background: #ffffff;
-	border: 1px solid #919191;
-	margin-bottom: 5px; padding-bottom: 5px;
-	width: 900px; height: auto;
-}
-
-#inside {
-	width: 900px; height: auto;
-	margin: 0 auto; 
-}
-
-#boxheader, th {
+.box .box-title {
+	font-size: 18px;
 	background: #c0c0c0;
-	padding-left: 5px;
-	height: auto;
-	border-bottom: 1px solid #000;
+	padding: 2px;
 }
 
-#boxheader h2 {
-	margin: 0;
-	color: #737373;
-}
+/** boards **/
 
-#boxcontent {
-	background:#ffffff;
-	padding:.5em;
-	padding-top:.25em;
-	padding-bottom:0;
-	line-height:130%;
-}
-
-#boxcontent img {
-	border: 0;
-}
-
-#column {
+.boards ul {
 	float: left;
-	position: relative;
-	overflow: hidden;
-	margin-right: 25px;
+	font-weight: bold;
 }
 
-#column h2 {
-	font-size: 12px;
-}
-
-#column ul {
+.boards ul li {
+	font-weight: normal;
 	list-style: none;
-	padding: 0;
-	margin: 0;
-}
-#column ul li {
-	margin: 0 2px;
 }
 
-#column ul a {
-	text-decoration: none;
-	padding: 0 0 3px;
-	color: #FF6600; 
+/** noticias **/
+
+.last-new .box-content {
+	padding: 0 5px;
 }
 
-#column ul a:hover {
-	border-color: #888;
-	color: #0066FF;
+/** ultimas imagens **/
+
+.last-images {
+	width: 49%;
+	float: left;
 }
 
-#footer {
-	clear: both; 
-	margin-bottom: 5px; padding-bottom: 5px;
-	width: 900px; height: auto;
-	margin: 10px auto; 
+.last-images .box-content {
+	height: 880px;
 	text-align: center;
-	font-size: 8px;
-}
-
-.recent-images {
-	text-align: center;
-	height: 345px;
 	overflow: auto;
-	margin-bottom: 0px; padding-bottom: 0px;
 }
 
-.recent-images li { 
-	margin: auto; 
-	margin-bottom: 5px; 
-	display: block; 
-	width: 250px; 
-	padding: 1px;
+.last-images ul {
+	width: 100%;
+	margin: 0;
+	padding: 0;
 }
 
-.recent-images a {
-	display: block;
+.last-images ul li {
+	background: #120;
+	list-style: none;
+	width: 280px;
+	height: auto;
+	margin: 10px auto;
+	padding: 10px;
 }
 
-.recent-images img {
-	display: block;
-	margin: auto;
+.last-images ul li img {
 	max-width: 250px;
 	max-height: 150px;
 }
 
-.recent-images li {
-	background: #120;
+/** Ultimos Posts **/
+
+.last-post,
+.popular-thread,
+.stats {
+	float: right;
+	width: 49%;
 }
 
-/* elementos */
-
-hr {
-	color: #999;
-	height: 1px;
-	width: 98%;
-	border-bottom: 0;
-}
+/** ban list **/
 
 table {
+	margin: 15px 0 0 0;
 	border-collapse: collapse;
+	background: #fff;
+}
+
+th {
+	background: #c0c0c0;
 }
 
 table, th, td {
 	border: 1px solid black;
-	padding: 2px;
+	padding: 3px;
 }
 
-a {
-	color: #FF6600;
+/** footer **/
+
+.footer {
+	text-align: center;
+	font-size: 12px;
+	margin-top: 5px;
 }
+
+/** formatação **/
+
+a {
+	color:#F60;
+}
+
 a:hover {
-	color: #0066FF;
+	color:#b34700;
 }
