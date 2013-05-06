@@ -3,7 +3,15 @@ Kusaba X Front Page Redesign
 
 A fully modded Kusaba X front page
 
-I made it few years ago, and now I decide share it due requests, It's an old code but fully funcional.
+I made it few years ago, and now I decide share it due requests.
+
+Changelog
+---------
+###### v2 - 06/05/2013 ######
+* Changed the way that script get the data from database, In some cases the old script executes over than 30 queries to generate the page, the actual will execute only 9.
+* Changed the way that "Last posts" and "Popular threads" are compiled, now Its get only one thread/post from each board
+* Now using Dwoo for templates, no more PHP and HTML mixed in only one file.
+* Due this change all pages and CSS was rewritten
 
 Features
 --------
