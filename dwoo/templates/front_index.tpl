@@ -32,8 +32,8 @@
 		<ul>
 			{foreach $last_images last_image}
 				<li>
-					<a href="http://xchan.info/{$last_image.board}/res/{$last_image.parentid}.html#{$last_image.id}">
-						<img src="http://xchan.info/{$last_image.board}/thumb/{$last_image.file}s.{$last_image.file_type}" alt="" />
+					<a href="{$last_image.board}/res/{$last_image.parentid}.html#{$last_image.id}">
+						<img src="{$last_image.board}/thumb/{$last_image.file}s.{$last_image.file_type}" alt="" />
 					</a>
 				</li>
 			{/foreach}
