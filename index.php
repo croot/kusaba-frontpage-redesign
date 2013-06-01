@@ -122,7 +122,7 @@ switch ($page) {
 
 		$popular_threads = $tc_db->GetAll($sql);
 
-		$imagecount = $tc_db->GetAll("SELECT COUNT(*) AS imagecount, SUM(file_size) AS imagesize FROM k_posts WHERE file_type != '' AND is_deleted = 0");
+		$imagecount = $tc_db->GetAll("SELECT COUNT(*) AS imagecount, SUM(file_size) AS imagesize FROM {$prefix}posts WHERE file_type != '' AND is_deleted = 0");
 
 		$postcount  = $tc_db->GetAll("SELECT COUNT(*) AS postcount FROM {$prefix}posts WHERE is_deleted = 0");
 
