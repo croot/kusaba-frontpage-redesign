@@ -80,6 +80,7 @@ switch ($page) {
 				    p.file_type
 				FROM {$prefix}posts AS p
 				JOIN {$prefix}boards AS b ON p.boardid = b.id
+				JOIN {$prefix}sections AS s ON b.section = s.id
 				WHERE file_type IN ('jpg' , 'gif', 'png') AND IS_DELETED = 0
 				ORDER BY TIMESTAMP DESC
 				LIMIT 10";
@@ -98,7 +99,8 @@ switch ($page) {
 					a.timestamp
 				FROM {$prefix}posts a
 				JOIN (SELECT MAX(id) AS lastid, boardid FROM {$prefix}posts WHERE is_deleted = 0 GROUP BY boardid) b ON a.id = b.lastid AND a.boardid = b.boardid
-				JOIN {$prefix}boards c ON a.boardid = c.id";
+				JOIN {$prefix}boards c ON a.boardid = c.id
+				JOIN {$prefix}sections s ON c.section = s.id";
 
 		$last_posts = $tc_db->GetAll($sql);
 
@@ -118,7 +120,8 @@ switch ($page) {
 				FROM {$prefix}posts a
 				JOIN (SELECT * FROM (SELECT COUNT(parentid) AS replies, parentid, boardid FROM {$prefix}posts WHERE parentid > 0 AND is_deleted = 0 GROUP BY parentid ORDER BY replies DESC) AS b GROUP BY b.boardid) b
 				ON a.id = b.parentid AND a.boardid = b.boardid
-				JOIN {$prefix}boards c ON a.boardid = c.id";
+				JOIN {$prefix}boards c ON a.boardid = c.id
+				JOIN {$prefix}sections s ON c.section = s.id";
 
 		$popular_threads = $tc_db->GetAll($sql);
 
